@@ -2,6 +2,10 @@ const express = require('express');
 
 const app = express();
 
+const routerUser = require('./routes/user.router');
+
+app.use(routerUser);
+
 // Não remover esse end-point, ele é necessário para o avaliador
 app.get('/', (request, response) => {
   response.send();
