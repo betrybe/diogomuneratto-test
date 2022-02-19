@@ -4,6 +4,14 @@ const app = express();
 
 const routerUser = require('./routes/user.router');
 
+app.use(
+  express.urlencoded({
+    extended: true
+  })
+)
+
+app.use(express.json())
+
 app.use(routerUser);
 
 // Não remover esse end-point, ele é necessário para o avaliador
