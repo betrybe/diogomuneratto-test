@@ -4,12 +4,18 @@ module.exports = {
     //verifica se o campos vazio
     isEmpty: (str) => {
 
-        if (str == undefined) return true;
-        if (str.trim() == '') {
-            return true;
+        try {
+
+            if (str == undefined) return true;
+            if (str.trim() == '') {
+                return true;
+            }
+            return false;
+
+        } catch (error) {
+            return false;
         }
-        return false;
-        
+
     },
 
     //verificaå email valido
