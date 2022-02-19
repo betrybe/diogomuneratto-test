@@ -33,17 +33,32 @@ module.exports = {
     update: async (id, data) => {
 
         const db = await conn();
-        const user = await db.collection('recipes').findOne({ _id: ObjectId(id) });
-        if (!user) return false;
+        const recipe = await db.collection('recipes').findOne({ _id: ObjectId(id) });
+        if (!recipe) return false;
 
-        return await db.collection('recipes').updateOne({ _id: ObjectId(id) }, { $set: data });
-        
+        let response = {};
+        if(recipe.userId == data.token._id || data.token.role == 'admin'){
+            delete data.token;
+            await db.collection('recipes').updateOne({ _id: ObjectId(id) }, { $set: data }).then(async result => {
+                response = await db.collection('recipes').findOne({ _id: ObjectId(id) });
+            })
+        } else {
+
+        }
+
+        return response;
+
     },
     
-    destroy: async (id) => {
+    destroy: async (id, token) => {
 
         const db = await conn();
-        return await db.collection('recipes').remove({ _id: ObjectId(id) });
+        const recipe = await db.collection('recipes').findOne({ _id: ObjectId(id) });
+        if (!recipe) return false;
+
+        if(recipe.userId == token._id || token.role == 'admin'){
+            return await db.collection('recipes').deleteOne({ _id: ObjectId(id) });
+        }        
 
     }
 }
