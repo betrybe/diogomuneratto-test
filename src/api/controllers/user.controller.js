@@ -20,11 +20,10 @@ const show = async (req, res) => {
 const store = async (req, res) => {
 
     let inputs = req.body;
-    let msg = 'Invalid entries. Try again.';
     
-    if(valid.isEmpty(inputs.name)) return res.status(400).send(msg);
-    if(valid.isEmpty(inputs.email) || !valid.isEmail(inputs.email)) return res.status(400).send(msg);
-    if(valid.isEmpty(inputs.password)) return res.status(400).send(msg);
+    if(valid.isEmpty(inputs.name)) return res.status(400).send('Invalid entries. Try again.');
+    if(valid.isEmpty(inputs.email) || !valid.isEmail(inputs.email)) return res.status(400).send('Invalid entries. Try again.');
+    if(valid.isEmpty(inputs.password)) return res.status(400).send('Invalid entries. Try again.');
 
     if(inputs.role != 'admin') inputs.role = 'user';
 

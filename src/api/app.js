@@ -2,7 +2,6 @@ const express = require('express');
 
 const app = express();
 
-const routerUser = require('./routes/user.router');
 
 app.use(
   express.urlencoded({
@@ -12,7 +11,8 @@ app.use(
 
 app.use(express.json())
 
-app.use(routerUser);
+app.use(require('./routes/login.router'));
+app.use(require('./routes/user.router'));
 
 // Não remover esse end-point, ele é necessário para o avaliador
 app.get('/', (request, response) => {

@@ -3,11 +3,13 @@ module.exports = {
 
     //verifica se o campos vazio
     isEmpty: (str) => {
-        if (str == undefined) return false;
-        if (!str.trim() == '') {
-            return false;
+
+        if (str == undefined) return true;
+        if (str.trim() == '') {
+            return true;
         }
-        return true;
+        return false;
+        
     },
 
     //verificaå email valido
