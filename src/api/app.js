@@ -1,15 +1,16 @@
 const express = require('express');
+const path = require('path');
 
 const app = express();
 
-
 app.use(
-  express.urlencoded({
-    extended: true
-  })
-)
+  express.urlencoded({ extended: true }),
+);
 
-app.use(express.json())
+app.use(express.json());
+
+const uploads = path.join(__dirname, '../uploads');
+app.use('/images', express.static(uploads));
 
 app.use(require('./routes/login.router'));
 app.use(require('./routes/user.router'));

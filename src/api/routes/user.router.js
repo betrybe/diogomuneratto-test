@@ -1,17 +1,14 @@
-const router = require('express');
+const Router = require('express');
+const auth = require('../middleware/verifyAuthJwt');
 
-const { index, show, store, update, destroy } = require('../controllers/user.controller');
+const { index, show, store } = require('../controllers/user.controller');
 
-const routes = new router();
+const routes = new Router();
 
 routes.get('/users', index);
 routes.get('/users/:id', show);
 routes.post('/users', store);
-routes.put('/users/:id', update);
-routes.delete('/users/:id', destroy);
 
-routes.get('/teste', (req, res) => {
-    res.status(200).json({ ok: 'conected' });
-});
+routes.post('/users/admin', auth, store);
 
 module.exports = routes;

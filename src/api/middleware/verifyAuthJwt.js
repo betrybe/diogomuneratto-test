@@ -1,19 +1,15 @@
-const { verifyToken } = require('../services/authJwt')
+const { verifyToken } = require('../services/authJwt');
 
-module.exports = function(req, res, next) {
-    
-    const token = req.headers['Authorization'];
-
+const verifyAuthJwt = async (req, res, next) => {
+    const token = req.headers.authorization;
     if (!token) {
-        return res.status(401).send({ auth: false, message: 'Token não informado.' });
+        return res.status(401).send({ message: 'missing auth token' });
     }
-
-    const decodeToken = verifyToken(token);
-
-    if(!decodeToken){
-        return res.status(500).send({ auth: false, message: 'Token inválido.' });
+    const decodeToken = await verifyToken(token);
+    if (!decodeToken) {
+        return res.status(401).send({ message: 'jwt malformed' });
     }
-
     req.user = decodeToken;
     next();
-}
+};
+module.exports = verifyAuthJwt;

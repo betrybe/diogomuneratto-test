@@ -1,55 +1,39 @@
-const model = require("../models/user.model");
-const valid = require("../services/validate");
+const model = require('../models/user.model');
+const valid = require('../services/validate');
 
 const index = async (req, res) => {
-
     const users = await model.getAll();
     return res.status(200).json(users);
-
-}
-
+};
 const show = async (req, res) => {
-
-    let id = req.params.id;
+    const { id } = req.params;
 
     const user = await model.get(id);
     return res.status(200).json(user);
-
-}
-
+};
 const store = async (req, res) => {
+    const { name, email, password } = req.body;
 
-    let inputs = req.body;
+    if (valid.isEmpty(name) 
+        || (valid.isEmpty(email) || !valid.isEmail(email)) 
+        || valid.isEmpty(password)) {
+        return res.status(400).send({
+            message: 'Invalid entries. Try again.',
+        });
+    } 
 
-    if (valid.isEmpty(inputs.name)) return res.status(400).send({ message: 'Invalid entries. Try again.' });
-    if (valid.isEmpty(inputs.email) || !valid.isEmail(inputs.email)) return res.status(400).send({ message: 'Invalid entries. Try again.' });
-    if (valid.isEmpty(inputs.password)) return res.status(400).send({ message: 'Invalid entries. Try again.' });
+    const data = { name, email, password, role: 'user' };
 
-    if (inputs.role != 'admin') inputs.role = 'user';
+    if (req.url === '/users/admin') {
+        if (req.user.role !== 'admin') {
+            return res.status(403).send({ message: 'Only admins can register new admins' });
+        }
+        data.role = 'admin';
+    } 
 
-    const user = await model.save(req.body);
-    if (user == false) return res.status(409).send({ message: 'Email already registered' });
+    const user = await model.save(data);
+    if (user === false) return res.status(409).send({ message: 'Email already registered' });
 
     return res.status(201).json(user);
-
-}
-
-const update = async (req, res) => {
-
-    let id = req.params.id;
-
-    const user = await model.update(id, req.body);
-    return res.status(200).json(user);
-
-}
-
-const destroy = async (req, res) => {
-
-    let id = req.params.id;
-
-    const user = await model.destroy(id);
-    return res.status(200).json(user);
-
-}
-
-module.exports = { index, show, store, update, destroy };
+};
+module.exports = { index, show, store };

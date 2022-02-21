@@ -1,8 +1,8 @@
-const router = require('express');
+const Router = require('express');
 
 const { index } = require('../controllers/login.controller');
 
-const routes = new router();
+const routes = new Router();
 
 routes.post('/login', index);
 

@@ -1,19 +1,21 @@
-const model = require("../models/login.model");
-const valid = require("../services/validate");
+const model = require('../models/login.model');
+const valid = require('../services/validate');
 
 const index = async (req, res) => {
+    const { email, password } = req.body;
+    if (valid.isEmpty(email) || !valid.isEmail(email)) {
+        return res.status(401).send({ message: 'All fields must be filled' });
+    }
+    if (valid.isEmpty(password)) {
+        return res.status(401).send({ message: 'All fields must be filled' });
+    }
 
-    let inputs = req.body;
+    const data = { email, password };
 
-    if (valid.isEmpty(inputs.email) || !valid.isEmail(inputs.email)) return res.status(401).send({ message: 'All fields must be filled.' });
-    if (valid.isEmpty(inputs.password)) return res.status(401).send({ message: 'All fields must be filled.' });
-
-    const response = await model.login(inputs);
+    const response = await model.login(data);
+    
     if (!response) return res.status(401).send({ message: 'Incorrect username or password' });
 
-    return res.status(200).json(response);
-
-}
-
-
+    return res.status(200).json({ token: response });
+};
 module.exports = { index };

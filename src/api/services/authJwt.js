@@ -2,21 +2,10 @@ const jwt = require('jsonwebtoken');
 
 const jwtSecret = 'ingDLMRuGe9UKHRNjs7cYckS2yul4lc3';
 
-const verifyToken = (token) => {
+const verifyToken = async (token) => jwt.verify(
+    token, jwtSecret, (err, decoded) => (err ? false : decoded),
+);
 
-    let tokenDecode = '';
-    jwt.verify(token, jwtSecret, function (err, decoded) {
+const generationToken = (data) => jwt.sign(data, jwtSecret);
 
-        if (err) return false;
-        tokenDecode = decoded;
-
-    });
-
-    return tokenDecode;
-}
-
-const generationToken = (data) => {
-    return { token: jwt.sign(data, jwtSecret) };
-}
-
-module.exports = { generationToken, verifyToken }
+module.exports = { generationToken, verifyToken };
